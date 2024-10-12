@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import edu.farmingdale.bcs371_w7_demo_nav.ui.theme.BCS371_W7_Demo_NavTheme
+import androidx.compose.foundation.layout.width
 
 class MainActivity2 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,56 +52,64 @@ class MainActivity2 : ComponentActivity() {
 
 @Composable
 fun BasicOperations(name: String, modifier: Modifier = Modifier) {
-    val  context = LocalContext.current
+    val context = LocalContext.current
+    var isSwitchChecked by remember { mutableStateOf(true) }
 
     Column {
         Spacer(modifier = Modifier.padding(50.dp))
-        Button( onClick = {
-            val newInt = Intent(Intent.ACTION_VIEW)
-            newInt.setData(Uri.parse("geo:0,0?q=Farmingdale State College, NY"))
-            context.startActivity(newInt)
-        },
-            modifier= Modifier.padding(start = 40.dp, end = 40.dp)) {
-            Icon( imageVector = Icons.Default.LocationOn, contentDescription = "Location")
-            Text("Show me  Farmingdale")
+
+        Button(
+            onClick = {
+                val newInt = Intent(Intent.ACTION_VIEW)
+                newInt.setData(Uri.parse("geo:0,0?q=Farmingdale State College, NY"))
+                context.startActivity(newInt)
+            },
+            modifier = Modifier.padding(start = 40.dp, end = 40.dp),
+            enabled = isSwitchChecked // Disable when switch is off
+        ) {
+            Icon(imageVector = Icons.Default.LocationOn, contentDescription = "Location")
+            Spacer(modifier = Modifier.width(10.dp))    //Change the spacing to 10dp
+            Text("Show me Farmingdale")
         }
+
         HorizontalDivider(thickness = DividerDefaults.Thickness)
 
-        Button( onClick = {
-            val newInt = Intent(Intent.ACTION_VIEW)
-            // ToDo 1: create implicit intent to open a web page or call a phone number
-            context.startActivity(newInt)
-        },
-            modifier= Modifier.padding(start = 40.dp, end = 40.dp)) {
-            Icon( imageVector = Icons.Default.Phone, contentDescription = "Phone")
+        Button(
+            onClick = {
+                val newInt = Intent(Intent.ACTION_DIAL) //Create implicit intent for phone
+                newInt.data = Uri.parse("tel:1631563596")
+                context.startActivity(newInt)
+            },
+            modifier = Modifier.padding(start = 40.dp, end = 40.dp),
+            enabled = isSwitchChecked   //Disable button based on switch
+        ) {
+            Icon(imageVector = Icons.Default.Phone, contentDescription = "Phone")
+            Spacer(modifier = Modifier.width(10.dp))
             Text("Call Me")
         }
 
         HorizontalDivider(thickness = DividerDefaults.Thickness)
 
-        Button( onClick = {
-            // ToDo 2: create explicit intent to open a new activity
-            context.startActivity(Intent(context, MainActivity::class.java))
-        },
-            modifier= Modifier.padding(start = 40.dp, end = 40.dp)) {
-            Icon( imageVector = Icons.Default.Info, contentDescription = "Phone")
+        Button(
+            onClick = {
+                context.startActivity(Intent(context, MainActivity::class.java)) //Explicit intent
+            },
+            modifier = Modifier.padding(start = 40.dp, end = 40.dp),
+            enabled = isSwitchChecked
+        ) {
+            Icon(imageVector = Icons.Default.Info, contentDescription = "Info")
+            Spacer(modifier = Modifier.width(10.dp))
             Text("Go To activity 2")
         }
 
-        // ToDo 3: Change the spacing between the icons and text to be 10dp
-        // ToDo 4: Add a horizontal divider between the buttons
+        HorizontalDivider(thickness = DividerDefaults.Thickness)
 
-
-        // ToDo 5: This switch is not working fix it
         Switch(
-            checked = true,
-            onCheckedChange = {  },
+            checked = isSwitchChecked,
+            onCheckedChange = { isSwitchChecked = it }, //Fixed the switch
             modifier = Modifier.padding(10.dp),
         )
-        // ToDo 6: when the switch is off, disable the buttons
     }
-
-
 }
 
 @Preview(showBackground = true)

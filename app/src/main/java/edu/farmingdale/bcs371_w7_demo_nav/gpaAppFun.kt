@@ -6,30 +6,27 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-
-// ToDo 10: make this composable navigable and then add a button to navigate to a suitable screen
 
 @Composable
 fun gpaappFun(navController: NavController) {
-
     var grade1 by remember { mutableStateOf("") }
     var grade2 by remember { mutableStateOf("") }
     var grade3 by remember { mutableStateOf("") }
 
-
     // Declare variables for GPA result and background color
     var gpa by remember { mutableStateOf("") }
     var backColor by remember { mutableStateOf(Color.White) }
-    var btnLabel by remember { mutableStateOf("Calulate GPA") }
+    var btnLabel by remember { mutableStateOf("Compute GPA") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = backColor),
+            .background(color = backColor)
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center
     ) {
-
         TextField(
             value = grade1,
             onValueChange = { grade1 = it },
@@ -46,10 +43,8 @@ fun gpaappFun(navController: NavController) {
             label = { Text("Course 3 Grade") },
         )
 
-
         Button(onClick = {
             if (btnLabel == "Compute GPA") {
-
                 val gpaVal = calGPA(grade1, grade2, grade3)
                 if (gpaVal != null) {
                     gpa = gpaVal.toString()
@@ -65,7 +60,7 @@ fun gpaappFun(navController: NavController) {
                     gpa = "Invalid input"
                 }
             } else {
-                // Reset all value to none
+
                 grade1 = ""
                 grade2 = ""
                 grade3 = ""
@@ -77,18 +72,17 @@ fun gpaappFun(navController: NavController) {
             Text(btnLabel)
         }
 
-
         if (gpa.isNotEmpty()) {
-            Text(text = "GPA: $gpa")
+            Text(text = "GPA: $gpa", modifier = Modifier.padding(top = 16.dp))
         }
-
-
     }
 }
 
-
-fun calGPA(grade1: String, grade2: String, grade3: String): Double {
-    val grades = listOf(grade1.toDouble(), grade2.toDouble(), grade3.toDouble())
-    return grades.average()
+fun calGPA(grade1: String, grade2: String, grade3: String): Double? {
+    return try {
+        val grades = listOf(grade1.toDouble(), grade2.toDouble(), grade3.toDouble())
+        grades.average()
+    } catch (e: Exception) {
+        null
+    }
 }
-
